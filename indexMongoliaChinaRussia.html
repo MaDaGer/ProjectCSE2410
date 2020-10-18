@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body style = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+<!-- Load d3.js -->
+<script src="https://d3js.org/d3.v6.js"></script>
+	<!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
+	<script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
+
+<!-- Create an element where the map will take place -->
+<svg id="my_dataviz" width="440" height="300"></svg>
+<script>
+
+// The svg
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+
+var contName= "Mongolia";
+var Center = [0,0];
+
+d3.json("https://gist.githubusercontent.com/DavidEnriqueNieves/5352bbc012b98ad84645876e54d07e1c/raw/074e2c15635e99bd089bade0f838ce5b88817cc8/countries.json")
+.then((data) => 
+{
+	console.log(data)
+
+ 
+			    // Filter data
+			    data.filter(
+			    	function(d){
+			    		if(d.name == contName ) {
+
+			    			console.log(d.name);
+			    			console.log(d.latlng.reverse());
+			    			console.log("Local Center is")
+			    			Center = d.latlng;
+			    			console.log(Center);
+
+			    			var projection = d3.geoMercator()
+										    .center(Center)                // GPS of location to zoom on
+										    .scale(500)                       // This is like the zoom
+										    .translate([ width/2, height/2 ])
+
+
+							// // Load external data and boot
+d3.json("https://raw.githubusercontent.com/DiegoWantedATinder/CountriesGeoJSON/main/countries.json")
+
+	.then((data) => {
+
+    // Filter data
+    data.features = data.features.filter(function(d){console.log(d.properties.ADMIN) ; return d.properties.ADMIN==contName})
+
+    // Draw the map
+    svg.append("g")
+        .selectAll("path")
+        .data(data.features)
+        .enter()
+        .append("path")
+          .attr("fill", "grey")
+          .attr("d", d3.geoPath()
+              .projection(projection))
+        .style("stroke", "none")
+})
+			    		}
+			    	})
+
+
+
+
+
+
+
+
+
+
+
+})
+
+
+console.log("Center is")
+console.log(Center)
+
+
+
+
+</script>
+
+
+</body>
