@@ -1,40 +1,47 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<body style = "position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+<body>
    <!-- Load d3.js -->
    <script src="https://d3js.org/d3.v6.js"></script>
    <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
-   <svg id="my_dataviz" width="440" height="300"></svg>
+   <!-- <svg id="my_dataviz" width="440" height="300"></svg> -->
    <script>
       // The svg
-      var svg = d3.select("svg"),
-          width = +svg.attr("width"),
-          height = +svg.attr("height");
+      // var svg = d3.select("svg"),
+      //     width = +svg.attr("width"),
+      //     height = +svg.attr("height");
       
       
-      var name= "Japan";
-      var Center = [0,0];
-      
+      // var name= "Japan";
+      // var Center = [0,0];
 
+
+
+
+
+// node.appendChild(para);
+
+
+// node.appendChild(para);
+// node.appendChild();
+
+
+// console.log(countries);
 function displayCont(contName,color, transLate) 
 {
 
-   d3.json("https://gist.githubusercontent.com/DavidEnriqueNieves/5352bbc012b98ad84645876e54d07e1c/raw/074e2c15635e99bd089bade0f838ce5b88817cc8/countries.json")
+   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
       .then((data) => 
       {
-        console.log(data)
+        console.log(data);
       
                     // Filter data
                     data.filter(
                         function(d){
-
-
                             if(d.name == contName ) 
                             {
-            
-
                                 console.log(d.name);
                                 console.log(d.latlng.reverse());
                                 console.log("Local Center is")
@@ -43,7 +50,7 @@ function displayCont(contName,color, transLate)
 
                                 var projection = d3.geoMercator()
                                                 .center(Center).scale(50).translate(transLate)
-                                d3.json("https://raw.githubusercontent.com/DiegoWantedATinder/CountriesGeoJSON/main/countries.json")
+                                d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
                                   .then((data) => {
 
 
@@ -80,17 +87,195 @@ function displayCont(contName,color, transLate)
 
 var xshift = 90;
 var yshift = 90;
-displayCont("Mongolia", "peru", [154.44 + xshift,120.6 + yshift])
-displayCont("Russia", "blue", [150 + xshift,100 + yshift])
-displayCont("China", "crimson", [154.44 + xshift,133.2 + yshift])
+// displayCont("Puerto Rico", "peru", [154.44 + xshift,120.6 + yshift])
+// displayCont("Russia", "blue", [150 + xshift,100 + yshift])
+// displayCont("China", "crimson", [154.44 + xshift,133.2 + yshift])
    
       
       
-      console.log("Center is")
-      console.log(Center)
+      // console.log("Center is")
+      // console.log(Center)
       
       
       
       
    </script>
+
+   <!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+#myInput {
+  box-sizing: border-box;
+  background-image: url('searchicon.png');
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  max-height: 230px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
+</head>
+<body>
+
+<h2>Search/Filter Dropdown</h2>
+<p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
+
+<div class="dropdown">
+  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+  <div id="myDropdown" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a clicked() href="#about">About</a>
+   <!--  <a href="#United States">help me</a>
+    <a href="#USA">help me</a>
+    <a href="#base">Base</a>
+    <a href="#blog">Blog</a>
+    <a href="#contact">Contact</a>
+    <a href="#custom">Custom</a>
+    <a href="#support">Support</a>
+    <a href="#tools">Tools</a> -->
+  </div>
+</div>
+
+<script>
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function myFunction() {
+  document.getElementById("myDropdown").classList.toggle("show");
+
+}
+document.getElementById("myDropdown").innerHTML = "<a href='#THE GAMBIA'>THE GAMBIA</a>";
+
+
+
+const countries = new Array(); 
+
+// console.log(typeof("help"));
+// console.log(typeof(countries))
+d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+.then((data) =>
+{
+  // console.log(data);
+  data.filter(
+    function(d){
+      // console.log(d.name);
+      // console.log(typeof(d.name));
+      countries.push(d.name);
+    }
+    )
+  // console.log(countries);
+
+  var innerHTMLString = "";
+  for(i = 0; i< countries.length; i++)
+  {
+    // console.log(countries[i]);
+    innerHTMLString += "<a href=#" + countries[i] + ">" + countries[i] + "</a>";
+
+  }
+  document.getElementById("myDropdown").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLString ;
+})
+
+
+
+function filterFunction() {
+
+   d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/aliases.json")
+  .then((data) =>
+  {
+
+      var nicknames = new Array();
+
+
+
+
+
+    nicknames = Object.keys(data);
+
+    // console.log(nicknames);
+
+      var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown");
+  a = div.getElementsByTagName("a");
+
+  console.log(typeof(Array.from(Object.values(nicknames))));
+  // const x = require('./custom_mappings.json')
+   
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter)  > -1) {
+      a[i].style.display = "";
+    }
+
+    // else if (filter inside of nicknames )
+    else if(nicknames.find(txtValue.toUpperCase().indexOf(filter)) )
+    {
+
+      console.log("I' here");
+
+
+    } 
+    else {
+      a[i].style.display = "none";
+    }
+  }
+
+
+  })
+
+
+
+}
+</script>
+
+</body>
+</html>
+
+
 </body>
