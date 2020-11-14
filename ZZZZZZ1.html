@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<body style = "height: 100%; position: relative; top: 50%; left: 50%;">
+<body style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
    <script src="https://d3js.org/d3.v6.js"></script>
    <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
-   <svg id="my_dataviz" style="width: 1000px; height: 500px; border: solid; border-color: red;"></svg>
+   <svg id="svg" style="width: 1000px; height: 500px; border: solid; border-color: red;"></svg>
    <script>
       // The svg
           var r = 0;
           var b = 0;
           var g = 0;
-          var svg = d3.select("svg"),
-          width = +svg.attr("width"),
-          height = +svg.attr("height");
+          var temp = d3.select("svg"),
+          width = +temp.attr("width"),
+          height = +temp.attr("height");
 
 function displayCont(contName,color) 
 {
@@ -24,28 +24,30 @@ function displayCont(contName,color)
    d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
       .then((data) => 
       {
-        // console.log(data);
                     // Filter data
                     data.filter(
                         function(d){
                             if(d.name == contName) 
                             {
-                                // console.log(d.name);
-                                // console.log(d.latlng.reverse());
-                                // console.log("Local Center is")
-                                Center = d.latlng;
-                                // console.log(Center);
+                               //  console.log(d.name);
+                                d.latlng.reverse();
+                               //  console.log("Local Center is")
+                                // d.latlng = [0,0];
+                               // Center = d.latlng;
+                               //  console.log(Center);
                                 // console.log(transLate);
-
-                                var projection = d3.geoMercator().scale(100)
+                               // console.log(d.latlng);
+                                var projection = d3.geoMercator()
+                                .center(d.latlng)
+                                .scale(100)
                                 d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
                                   .then((data) => {
-
-
+                                   // console.log(d.latlng);
+                                    
                                       data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
-                                  
+                                      console.log(data.features.filter(function(d){ return d.geometry}));
                                       // Draw the map
-                                      svg.append("g")
+                                      temp.append("g")
                                           .selectAll("path")
                                           .data(data.features)
                                           .enter()
@@ -53,6 +55,7 @@ function displayCont(contName,color)
                                             .attr("fill", "rgb("+r+","+g+","+b+")")
                                             .attr("d", d3.geoPath()
                                                 .projection(projection))
+                                            
                                     })
                                                       
                             }
