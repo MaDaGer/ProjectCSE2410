@@ -2,25 +2,44 @@
 <meta charset="utf-8">
 <body style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
-   <script src="https://d3js.org/d3.v6.js"></script>
+   <script src="https://d3js.org/d3.v6.js">
+  
+  
+  </script>
    <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
-   <svg id="svg" style="width: 1000px; height: 500px; border: solid; border-color: red;"></svg>
+  <!-- <table id = "tb"> -->
+   <body id ="bod"></body>
    <script>
       // The svg
           var r = 0;
           var b = 0;
           var g = 0;
-          var temp = d3.select("svg"),
-          width = +temp.attr("width"),
-          height = +temp.attr("height");
-
+          var t ="";
+          var alpha = 'a';
+      for(var i =0; i < 15; i++){
+        
+          var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
+          t =t.concat(WOW);
+          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
+        }
+        document.getElementById("bod").innerHTML = t;
+      /*    var v = new Array(5);
+          for(var i = 0; i < 5; i++){
+            var b = "svg"+ i;
+            b = b.toString();
+            v[i] = "d3.select("+b+")";
+          }
+          width = +d3.select("svg0").attr("width"),
+          height = +d3.select("svg0").attr("height");
+*/
 function displayCont(contName,color) 
 {
+
   r = Math.floor((Math.random() * 255) + 1);
-  g = Math.floor((Math.random() * 255) + 1);;
-  b = Math.floor((Math.random() * 255) + 1);;
+  g = Math.floor((Math.random() * 255) + 1);
+  b = Math.floor((Math.random() * 255) + 1);
    d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
       .then((data) => 
       {
@@ -45,17 +64,22 @@ function displayCont(contName,color)
                                    // console.log(d.latlng);
                                     
                                       data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
-                                      console.log(data.features.filter(function(d){ return d.geometry}));
+                                     // console.log(data.features.filter(function(d){ return d.geometry}));
                                       // Draw the map
-                                      temp.append("g")
+                                      var beta = 'a';
+                                      for(var i = 0; i < 15; i++){
+                                       var q = d3.select("#svg"+beta+"");
+                                       beta = String.fromCharCode(beta.charCodeAt(0)+1);
+                                        q.append("g")
                                           .selectAll("path")
                                           .data(data.features)
                                           .enter()
                                           .append("path")
                                             .attr("fill", "rgb("+r+","+g+","+b+")")
                                             .attr("d", d3.geoPath()
-                                                .projection(projection))
-                                            
+                                                .projection(projection));   
+      
+                                      }
                                     })
                                                       
                             }
@@ -107,7 +131,7 @@ var yshift = 90;
 
 #myInput {
   box-sizing: border-box;
-  background-image: url('searchicon.png');
+  
   background-position: 14px 12px;
   background-repeat: no-repeat;
   font-size: 16px;
