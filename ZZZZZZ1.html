@@ -18,13 +18,7 @@
           var g = 0;
           var t ="";
           var alpha = 'a';
-      for(var i =0; i < 15; i++){
-        
-          var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
-          t =t.concat(WOW);
-          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
-        }
-        document.getElementById("bod").innerHTML = t;
+      
       /*    var v = new Array(5);
           for(var i = 0; i < 5; i++){
             var b = "svg"+ i;
@@ -34,8 +28,16 @@
           width = +d3.select("svg0").attr("width"),
           height = +d3.select("svg0").attr("height");
 */
-function displayCont(contName,color) 
+function displayCont(contName,color, counter) 
 {
+
+  for(var i =0; i < counter; i++){
+        
+          var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
+          t =t.concat(WOW);
+          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
+        }
+        document.getElementById("bod").innerHTML = t;
 
   r = Math.floor((Math.random() * 255) + 1);
   g = Math.floor((Math.random() * 255) + 1);
@@ -67,7 +69,7 @@ function displayCont(contName,color)
                                      // console.log(data.features.filter(function(d){ return d.geometry}));
                                       // Draw the map
                                       var beta = 'a';
-                                      for(var i = 0; i < 15; i++){
+                                      for(var i = 0; i < counter; i++){
                                        var q = d3.select("#svg"+beta+"");
                                        beta = String.fromCharCode(beta.charCodeAt(0)+1);
                                         q.append("g")
@@ -237,7 +239,7 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
   for(i = 0; i< countries.length; i++)
   {
     // console.log(countries[i]);
-    innerHTMLString += "<a onclick=\"return displayCont(\'" + countries[i] + "\', \'red\', [0,0]);\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLString += "<a onclick=\"return displayCont(\'" + countries[i] + "\', \'red\', 3);\" href=#" + countries[i] + ">" + countries[i] + "</a>";
 
   }
   document.getElementById("myDropdown").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLString ;
