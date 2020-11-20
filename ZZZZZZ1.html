@@ -2,118 +2,71 @@
 <meta charset="utf-8">
 <body style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
-   <script src="https://d3js.org/d3.v6.js">
-  
-  
-  </script>
-   <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
-      <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
-   <!-- Create an element where the map will take place -->
-  <!-- <table id = "tb"> -->
-   <body id ="bod"></body>
-   <script>
-      // The svg
-          var r = 0;
-          var b = 0;
-          var g = 0;
-          var t ="";
-          var alpha = 'a';
-      
-      /*    var v = new Array(5);
-          for(var i = 0; i < 5; i++){
-            var b = "svg"+ i;
-            b = b.toString();
-            v[i] = "d3.select("+b+")";
-          }
-          width = +d3.select("svg0").attr("width"),
-          height = +d3.select("svg0").attr("height");
-*/
-function displayCont(contName,color, counter) 
-{
+   <script src="https://d3js.org/d3.v6.js"></script>
+<body id ="svgInsertion"></body>
+<script>
+  function displayCont(countryName,identifier,counter) 
+  {
+    var svgImplementation = ""; // This varaible will be used to store all the svgs that are going to be needed
+    var svgIdentifier = 'a'; // This variable is used to give each of the added svgs their own individual identifier per function call
+    for(var i =0; i < counter; i++) // Creates all the necessary SVGS
+    {
+      var svgLine = "<svg id="+identifier +svgIdentifier+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>"; //Creates a new svg with thier new identifier
+      svgImplementation = svgImplementation.concat(svgLine); // Concatenates the svg overall
+      svgIdentifier = String.fromCharCode(svgIdentifier.charCodeAt(0)+1); // increments the svg identifier by one so that it can be in sequential order
+    }
+    document.getElementById("svgInsertion").innerHTML = svgImplementation; // Adds the created svg to the identifier 
 
-  for(var i =0; i < counter; i++){
-        
-          var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
-          t =t.concat(WOW);
-          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
-        }
-        document.getElementById("bod").innerHTML = t;
-
-  r = Math.floor((Math.random() * 255) + 1);
-  g = Math.floor((Math.random() * 255) + 1);
-  b = Math.floor((Math.random() * 255) + 1);
-   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+    //Will generate a random number from 1 to 255 and be used to color in the country randomly
+    var redValue = Math.floor((Math.random() * 255) + 1); 
+    var greenValue = Math.floor((Math.random() * 255) + 1);
+    var blueVale = Math.floor((Math.random() * 255) + 1);
+    
+    //Gets the necessary JSON data from a list of countries throughout the world
+    d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
       .then((data) => 
       {
-                    // Filter data
-                    data.filter(
-                        function(d){
-                            if(d.name == contName) 
-                            {
-                               //  console.log(d.name);
-                                d.latlng.reverse();
-                               //  console.log("Local Center is")
-                                // d.latlng = [0,0];
-                               // Center = d.latlng;
-                               //  console.log(Center);
-                                // console.log(transLate);
-                               // console.log(d.latlng);
-                                var projection = d3.geoMercator()
-                                .center(d.latlng)
-                                .scale(100)
-                                d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
-                                  .then((data) => {
-                                   // console.log(d.latlng);
-                                    
-                                      data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
-                                     // console.log(data.features.filter(function(d){ return d.geometry}));
-                                      // Draw the map
-                                      var beta = 'a';
-                                      for(var i = 0; i < counter; i++){
-                                       var q = d3.select("#svg"+beta+"");
-                                       beta = String.fromCharCode(beta.charCodeAt(0)+1);
-                                        q.append("g")
-                                          .selectAll("path")
-                                          .data(data.features)
-                                          .enter()
-                                          .append("path")
-                                            .attr("fill", "rgb("+r+","+g+","+b+")")
-                                            .attr("d", d3.geoPath()
-                                                .projection(projection));   
-      
-                                      }
-                                    })
-                                                      
-                            }
-                                      })
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+        // Filter data
+        data.filter(
+        function(d)
+        {
+          if(d.name == countryName) 
+          {
+            //The d3 function call for centering does it in (East,North) coordinates as opposed to (North,East) so it must be flipped
+            d.latlng.reverse(); // Flips the coordinates for the center coordinate of a country
+            var projection = d3.geoMercator() 
+              .center(d.latlng) //Centers the country in the center of the svg
+              .scale(100) //Scales the size of the country
+
+            //Grabs another json file that contains the coordinates of countries (not all of the countries in the previous json are in here)
+            d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
+            .then((data) => 
+            {                       
+              //Finds the country within the new json file to return the properties of it           
+              data.features = data.features.filter(function(d){ return d.properties.ADMIN==countryName})
+              svgIdentifier = 'a';// sets the identier at the beginning so that it can iterate through it
+              for(var i = 0; i < counter; i++) // Draws the map in each svg
+              {
+                var svgSection = d3.select("#"+identifier+svgIdentifier+"");
+                svgIdentifier = String.fromCharCode(svgIdentifier.charCodeAt(0)+1);
+                svgSection.append("g")
+                          .selectAll("path")
+                          .data(data.features)
+                          .enter()
+                          .append("path")
+                          .attr("fill", "rgb("+redValue+","+greenValue+","+blueVale+")")
+                          .attr("d", d3.geoPath().projection(projection));   
+              }
+            }
+            )                                                     
+          }
+        }
+        )
       })
+  }
+</script>
 
-}
-
-var xshift = 90;
-var yshift = 90;
-// displayCont("Puerto Rico", "peru", [154.44 + xshift,120.6 + yshift])
-// displayCont("Russia", "blue", [150 + xshift,100 + yshift])
-// displayCont("China", "crimson", [154.44 + xshift,133.2 + yshift])
-   
-      
-      
-      // console.log("Center is")
-      // console.log(Center)
-   </script>
-
-   <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -177,32 +130,47 @@ var yshift = 90;
 
 <h2>Search/Filter Dropdown</h2>
 <p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
+<form>
 <table width="1000px">
 <tr>
   <td>
-<div >
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-    <a clicked() href="#about">About</a>
+  <div >
+    <button onclick="showCont1()" class="dropbtn">Country 1</button>
+    <div id="cont1" class="dropdown-content">
+      <input type="cont1Input" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont1','cont1Input')">
+      <a clicked() href="#about">About</a>
+    </div>
   </div>
-</div>
-
-</td>
+  </td>
 
 <td>
 
 <div >
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+  <button onclick="showCont2()" class="dropbtn">Country 2</button>
+  <div id="cont2" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont2', 'cont2Input')">
     <a clicked() href="#about">About</a>
   </div>
 </div>
 
+<td>
+<div >
+  <button onclick="showOption()" class="dropbtn">Option</button>
+  <div id="option" class="dropdown-content">
+    <input type="optionInput" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a clicked() href="#about">About</a>
+  </div>
+</div>
+</td>
+
+
 </td>
 
 </tr>
+
+</table>
+<button onclick="submit()" class="dropbtn">Submit</button>
+</form>
 
 
 
@@ -210,11 +178,15 @@ var yshift = 90;
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-
+function showCont1() {
+  document.getElementById("cont1").classList.toggle("show");
 }
-document.getElementById("myDropdown").innerHTML = "<a href='#THE GAMBIA'>THE GAMBIA</a>";
+function showCont2() {
+  document.getElementById("cont2").classList.toggle("show");
+}
+function showOption() {
+  document.getElementById("option").classList.toggle("show");
+}
 
 
 
@@ -235,33 +207,51 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
     )
   // console.log(countries);
 
-  var innerHTMLString = "";
+  var innerHTMLCont1 = "";
+  var innerHTMLCont2 = "";
+  var optionKeys = ["population", "area", "Internet users"]
   for(i = 0; i< countries.length; i++)
   {
     // console.log(countries[i]);
-    innerHTMLString += "<a onclick=\"return displayCont(\'" + countries[i] + "\', \'red\', 3);\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLCont1 += "<a onclick=\"cont1Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLCont2 += "<a onclick=\"cont2Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";  
 
   }
-  document.getElementById("myDropdown").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLString ;
+  var innerHTMLOption = "";
+  for(i = 0; i< optionKeys.length; i++)
+  {
+    // console.log(countries[i]);
+    innerHTMLOption += "<a onclick=\"optionName = \'" + optionKeys[i] + "\';\" href=#" + optionKeys[i] + ">" + optionKeys[i] + "</a>";
+
+  }
+
+  document.getElementById("cont1").innerHTML  = '<input type="text" placeholder="Search.." id="cont1Input" onkeyup="filterFunction(\'cont1\', \'cont1Input\')">' + innerHTMLCont1 ;
+  document.getElementById("cont2").innerHTML  = '<input type="text" placeholder="Search.." id="cont2Input" onkeyup="filterFunction(\'cont2\', \'cont2Input\')">' + innerHTMLCont2 ;
+    document.getElementById("option").innerHTML  = '<input type="text" placeholder="Search.." id="optionInput" onkeyup="filterFunction(\'option\', \'optionInput\')">' + innerHTMLOption ;
+
 })
 
+var cont1Name = "";
+var cont2Name = "";
+var optionName = "";
 
 
-function filterFunction() {
+
+
+function filterFunction(dropdownID, inputID) {
 
    d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/aliases.json")
   .then((data) =>
   {
-
       var nicknames = new Array();
     nicknames = Object.keys(data);
     conts = Object.values(data);
     // console.log(nicknames);
 
       var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
+  input = document.getElementById(inputID);
   filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
+  div = document.getElementById(dropdownID);
   a = div.getElementsByTagName("a");
 
   for (i = 0; i < a.length; i++) {
