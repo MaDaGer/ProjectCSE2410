@@ -2,6 +2,13 @@
 <meta charset="utf-8">
 <body style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
+   <table>
+    <tr>
+      <th id="Random">
+        0
+      </th>
+    </tr>
+    </table>
    <script src="https://d3js.org/d3.v6.js">
   
   
@@ -30,19 +37,36 @@
 */
 
 
-function select_figure_remote(country, selector, url)
+function select_figure_remote(cont1Name,cont2Name, selector, url)
 {
+  var temp ="";
+  var cont1Value = 0;
+  var cont2Value = 0;
   d3.csv(String(url)).then(function(data) {
-          data.forEach(function(d) {
+    var output2 =  data.forEach(function(d) {
             d.country = d.country;
             // d.population = +d.population;
           });
-          data.filter(function(d){
-            if(d.country == country) {
+
+          var output = data.filter(function(d){
+            if(d.country == cont1Name) {
               console.log(d[selector]);
+              cont1Value = d[selector];
+            }
+            else if(d.country == cont2Name)
+            {
+              cont2Value = d[selector];
             }
           })
+          console.log("cont1Value is ");
+          console.log(cont1Value);
+          console.log("cont2Value is ")
+          console.log(cont2Value);
+          
+
         });
+
+
 }
 
 
@@ -184,6 +208,7 @@ var yshift = 90;
 
 <h2>Search/Filter Dropdown</h2>
 <p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
+
 <table width="1000px">
 <tr>
   <td>
@@ -221,11 +246,14 @@ var yshift = 90;
 
 </tr>
 
-<tr>
-<button onclick="submit()" class="dropbtn">Submit</button>
-</tr>
+
 
 </table>
+
+
+<button onclick="submitCalc(cont1Name, cont2Name, optionName)" class="dropbtn">Submit</button>
+
+
 
 
 
@@ -243,6 +271,41 @@ function showOption() {
   document.getElementById("option").classList.toggle("show");
 }
 
+
+
+
+function submitCalc(cont1Name, cont2Name, option)
+{
+  console.log(cont1Name);
+  console.log(cont2Name);
+  console.log(option);
+
+  var gitLink = "";
+  switch(option)
+  {
+    case "population":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/pop.csv";
+    break;
+    case "Internet users":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20internet%20users.csv";
+    break;
+    case "area":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20area.csv";
+    break;
+  }
+
+  console.log("GitLink is", gitLink)
+  var cont1Value = select_figure_remote(cont1Name, cont2Name, optionName, gitLink);
+  var cont2Value = select_figure_remote(cont1Name, cont2Name, optionName, gitLink);
+
+  console.log("Cont 1 value is ");
+  console.log(document.getElementById("Random").innerText);
+  console.log(cont1Value);
+  console.log("Cont 2 value is");
+  console.log(cont2Value);
+  console.log(parseInt(cont1Value) / parseInt(cont2Value))
+
+}
 
 
 const countries = new Array(); 
@@ -286,9 +349,11 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
 
 })
 
-var cont1Name = "";
-var cont2Name = "";
-var optionName = "";
+var cont1Name = "Russia";
+var cont2Name = "China";
+var optionName = "area";
+var cont1Value = 0;
+var cont2Value = 0;
 
 
 
