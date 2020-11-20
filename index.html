@@ -103,18 +103,7 @@ function displayCont(contName,color, counter)
                                     })
                                                       
                             }
-                                      })
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+                                      })       
       })
 
 }
@@ -198,22 +187,21 @@ var yshift = 90;
 <table width="1000px">
 <tr>
   <td>
-<div >
-  <button onclick="showCont1()" class="dropbtn">Country 1</button>
-  <div id="cont1" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
-    <a clicked() href="#about">About</a>
+  <div >
+    <button onclick="showCont1()" class="dropbtn">Country 1</button>
+    <div id="cont1" class="dropdown-content">
+      <input type="cont1Input" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont1','cont1Input')">
+      <a clicked() href="#about">About</a>
+    </div>
   </div>
-</div>
-
-</td>
+  </td>
 
 <td>
 
 <div >
   <button onclick="showCont2()" class="dropbtn">Country 2</button>
   <div id="cont2" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont2', 'cont2Input')">
     <a clicked() href="#about">About</a>
   </div>
 </div>
@@ -222,7 +210,7 @@ var yshift = 90;
 <div >
   <button onclick="showOption()" class="dropbtn">Option</button>
   <div id="option" class="dropdown-content">
-    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <input type="optionInput" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
     <a clicked() href="#about">About</a>
   </div>
 </div>
@@ -232,6 +220,12 @@ var yshift = 90;
 </td>
 
 </tr>
+
+<tr>
+<button onclick="submit()" class="dropbtn">Submit</button>
+</tr>
+
+</table>
 
 
 
@@ -286,9 +280,9 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
 
   }
 
-  document.getElementById("cont1").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLCont1 ;
-  document.getElementById("cont2").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLCont2 ;
-    document.getElementById("option").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLOption ;
+  document.getElementById("cont1").innerHTML  = '<input type="text" placeholder="Search.." id="cont1Input" onkeyup="filterFunction(\'cont1\', \'cont1Input\')">' + innerHTMLCont1 ;
+  document.getElementById("cont2").innerHTML  = '<input type="text" placeholder="Search.." id="cont2Input" onkeyup="filterFunction(\'cont2\', \'cont2Input\')">' + innerHTMLCont2 ;
+    document.getElementById("option").innerHTML  = '<input type="text" placeholder="Search.." id="optionInput" onkeyup="filterFunction(\'option\', \'optionInput\')">' + innerHTMLOption ;
 
 })
 
@@ -299,21 +293,20 @@ var optionName = "";
 
 
 
-function filterFunction() {
+function filterFunction(dropdownID, inputID) {
 
    d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/aliases.json")
   .then((data) =>
   {
-
       var nicknames = new Array();
     nicknames = Object.keys(data);
     conts = Object.values(data);
     // console.log(nicknames);
 
       var input, filter, ul, li, a, i;
-  input = document.getElementById("myInput");
+  input = document.getElementById(inputID);
   filter = input.value.toUpperCase();
-  div = document.getElementById("myDropdown");
+  div = document.getElementById(dropdownID);
   a = div.getElementsByTagName("a");
 
   for (i = 0; i < a.length; i++) {
