@@ -1,71 +1,105 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<body>
+<body style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
-   <script src="https://d3js.org/d3.v6.js"></script>
+   <script src="https://d3js.org/d3.v6.js">
+  
+  
+  </script>
    <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
-   <!-- <svg id="my_dataviz" width="440" height="300"></svg> -->
+  <!-- <table id = "tb"> -->
+   <body id ="bod"></body>
    <script>
       // The svg
-      // var svg = d3.select("svg"),
-      //     width = +svg.attr("width"),
-      //     height = +svg.attr("height");
+          var r = 0;
+          var b = 0;
+          var g = 0;
+          var t ="";
+          var alpha = 'a';
       
-      
-      // var name= "Japan";
-      // var Center = [0,0];
+      /*    var v = new Array(5);
+          for(var i = 0; i < 5; i++){
+            var b = "svg"+ i;
+            b = b.toString();
+            v[i] = "d3.select("+b+")";
+          }
+          width = +d3.select("svg0").attr("width"),
+          height = +d3.select("svg0").attr("height");
+*/
 
 
+function select_figure_remote(country, selector, url)
+{
+  d3.csv(String(url)).then(function(data) {
+          data.forEach(function(d) {
+            d.country = d.country;
+            // d.population = +d.population;
+          });
+          data.filter(function(d){
+            if(d.country == country) {
+              console.log(d[selector]);
+            }
+          })
+        });
+}
 
 
-
-// node.appendChild(para);
-
-
-// node.appendChild(para);
-// node.appendChild();
-
-
-// console.log(countries);
-function displayCont(contName,color, transLate) 
+function displayCont(contName,color, counter) 
 {
 
+  for(var i =0; i < counter; i++){
+        
+          var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
+          t =t.concat(WOW);
+          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
+        }
+        document.getElementById("bod").innerHTML = t;
+
+  r = Math.floor((Math.random() * 255) + 1);
+  g = Math.floor((Math.random() * 255) + 1);
+  b = Math.floor((Math.random() * 255) + 1);
    d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
       .then((data) => 
       {
-        console.log(data);
-      
                     // Filter data
                     data.filter(
                         function(d){
-                            if(d.name == contName ) 
+                            if(d.name == contName) 
                             {
-                                console.log(d.name);
-                                console.log(d.latlng.reverse());
-                                console.log("Local Center is")
-                                Center = d.latlng;
-                                console.log(Center);
-
+                               //  console.log(d.name);
+                                d.latlng.reverse();
+                               //  console.log("Local Center is")
+                                // d.latlng = [0,0];
+                               // Center = d.latlng;
+                               //  console.log(Center);
+                                // console.log(transLate);
+                               // console.log(d.latlng);
                                 var projection = d3.geoMercator()
-                                                .center(Center).scale(50).translate(transLate)
+                                .center(d.latlng)
+                                .scale(100)
                                 d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
                                   .then((data) => {
-
-
-                                      data.features = data.features.filter(function(d){console.log(d.properties.ADMIN) ; return d.properties.ADMIN==contName})
-                                  
+                                   // console.log(d.latlng);
+                                    
+                                      data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
+                                     // console.log(data.features.filter(function(d){ return d.geometry}));
                                       // Draw the map
-                                      svg.append("g")
+                                      var beta = 'a';
+                                      for(var i = 0; i < counter; i++){
+                                       var q = d3.select("#svg"+beta+"");
+                                       beta = String.fromCharCode(beta.charCodeAt(0)+1);
+                                        q.append("g")
                                           .selectAll("path")
                                           .data(data.features)
                                           .enter()
                                           .append("path")
-                                            .attr("fill", color)
+                                            .attr("fill", "rgb("+r+","+g+","+b+")")
                                             .attr("d", d3.geoPath()
-                                                .projection(projection))
-                                          .style("stroke", "none")
+                                                .projection(projection));   
+      
+                                      }
                                     })
                                                       
                             }
@@ -95,10 +129,6 @@ var yshift = 90;
       
       // console.log("Center is")
       // console.log(Center)
-      
-      
-      
-      
    </script>
 
    <!DOCTYPE html>
@@ -121,7 +151,7 @@ var yshift = 90;
 
 #myInput {
   box-sizing: border-box;
-  background-image: url('searchicon.png');
+  
   background-position: 14px 12px;
   background-repeat: no-repeat;
   font-size: 16px;
@@ -133,7 +163,7 @@ var yshift = 90;
 #myInput:focus {outline: 3px solid #ddd;}
 
 .dropdown {
-  position: relative;
+  /*position: relative;*/
   display: inline-block;
 }
 
@@ -143,6 +173,7 @@ var yshift = 90;
   background-color: #f6f6f6;
   min-width: 230px;
   max-height: 230px;
+  min-height: 300px;
   overflow: auto;
   border: 1px solid #ddd;
   z-index: 1;
@@ -164,32 +195,59 @@ var yshift = 90;
 
 <h2>Search/Filter Dropdown</h2>
 <p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
-
-<div class="dropdown">
-  <button onclick="myFunction()" class="dropbtn">Dropdown</button>
-  <div id="myDropdown" class="dropdown-content">
+<table width="1000px">
+<tr>
+  <td>
+<div >
+  <button onclick="showCont1()" class="dropbtn">Country 1</button>
+  <div id="cont1" class="dropdown-content">
     <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
     <a clicked() href="#about">About</a>
-   <!--  <a href="#United States">help me</a>
-    <a href="#USA">help me</a>
-    <a href="#base">Base</a>
-    <a href="#blog">Blog</a>
-    <a href="#contact">Contact</a>
-    <a href="#custom">Custom</a>
-    <a href="#support">Support</a>
-    <a href="#tools">Tools</a> -->
   </div>
 </div>
+
+</td>
+
+<td>
+
+<div >
+  <button onclick="showCont2()" class="dropbtn">Country 2</button>
+  <div id="cont2" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a clicked() href="#about">About</a>
+  </div>
+</div>
+
+<td>
+<div >
+  <button onclick="showOption()" class="dropbtn">Option</button>
+  <div id="option" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a clicked() href="#about">About</a>
+  </div>
+</div>
+</td>
+
+
+</td>
+
+</tr>
+
+
 
 <script>
 
 /* When the user clicks on the button,
 toggle between hiding and showing the dropdown content */
-function myFunction() {
-  document.getElementById("myDropdown").classList.toggle("show");
-
+function showCont1() {
+  document.getElementById("cont1").classList.toggle("show");
 }
-document.getElementById("myDropdown").innerHTML = "<a href='#THE GAMBIA'>THE GAMBIA</a>";
+function showCont2() {
+  document.getElementById("cont2").classList.toggle("show");
+}
+function showOption() {
+  document.getElementById("option").classList.toggle("show");
+}
 
 
 
@@ -210,15 +268,34 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
     )
   // console.log(countries);
 
-  var innerHTMLString = "";
+  var innerHTMLCont1 = "";
+  var innerHTMLCont2 = "";
+  var optionKeys = ["population", "area", "Internet users"]
   for(i = 0; i< countries.length; i++)
   {
     // console.log(countries[i]);
-    innerHTMLString += "<a href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLCont1 += "<a onclick=\"cont1Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLCont2 += "<a onclick=\"cont2Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";  
 
   }
-  document.getElementById("myDropdown").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLString ;
+  var innerHTMLOption = "";
+  for(i = 0; i< optionKeys.length; i++)
+  {
+    // console.log(countries[i]);
+    innerHTMLOption += "<a onclick=\"optionName = \'" + optionKeys[i] + "\';\" href=#" + optionKeys[i] + ">" + optionKeys[i] + "</a>";
+
+  }
+
+  document.getElementById("cont1").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLCont1 ;
+  document.getElementById("cont2").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLCont2 ;
+    document.getElementById("option").innerHTML  = '<input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction()">' + innerHTMLOption ;
+
 })
+
+var cont1Name = "";
+var cont2Name = "";
+var optionName = "";
+
 
 
 
@@ -229,13 +306,8 @@ function filterFunction() {
   {
 
       var nicknames = new Array();
-
-
-
-
-
     nicknames = Object.keys(data);
-
+    conts = Object.values(data);
     // console.log(nicknames);
 
       var input, filter, ul, li, a, i;
@@ -244,23 +316,16 @@ function filterFunction() {
   div = document.getElementById("myDropdown");
   a = div.getElementsByTagName("a");
 
-  console.log(typeof(Array.from(Object.values(nicknames))));
-  // const x = require('./custom_mappings.json')
-   
   for (i = 0; i < a.length; i++) {
     txtValue = a[i].textContent || a[i].innerText;
     if (txtValue.toUpperCase().indexOf(filter)  > -1) {
       a[i].style.display = "";
     }
-
     // else if (filter inside of nicknames )
-    else if(nicknames.find(txtValue.toUpperCase().indexOf(filter)) )
-    {
-
-      console.log("I' here");
-
-
-    } 
+    // else if(nicknames.find())
+    // {
+    //   console.log("I' here");
+    // } 
     else {
       a[i].style.display = "none";
     }
