@@ -17,58 +17,169 @@
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
   <!-- <table id = "tb"> -->
-   <body id ="bod"></body>
+   <body id ="svgInsertion"></body>
    <script>
-      // The svg
-          var r = 0;
-          var b = 0;
-          var g = 0;
-          var t ="";
-          var alpha = 'a';
-      
-      /*    var v = new Array(5);
-          for(var i = 0; i < 5; i++){
-            var b = "svg"+ i;
-            b = b.toString();
-            v[i] = "d3.select("+b+")";
-          }
-          width = +d3.select("svg0").attr("width"),
-          height = +d3.select("svg0").attr("height");
-*/
 
-
+var alpha = 'a';
+var t = '';
 function select_figure_remote(cont1Name,cont2Name, selector, url)
 {
   var temp ="";
   var cont1Value = 0;
   var cont2Value = 0;
+  console.log(cont1Name);
+  console.log(cont2Name);
+  console.log(cont1Value);
+  console.log(cont2Value);
+  console.log(selector);
   d3.csv(String(url)).then(function(data) {
     var output2 =  data.forEach(function(d) {
             d.country = d.country;
             // d.population = +d.population;
           });
-
           var output = data.filter(function(d){
             if(d.country == cont1Name) {
+              console.log(String(d.country));
               console.log(d[selector]);
-              cont1Value = d[selector];
+              cont1Value = +d[selector];
             }
             else if(d.country == cont2Name)
             {
-              cont2Value = d[selector];
+              console.log(d.country);
+              cont2Value = +d[selector];
             }
           })
-          console.log("cont1Value is ");
-          console.log(cont1Value);
+
+          var ratioNumber = 0;
+          if(cont1Value == 0 || cont2Value == 0)
+          {
+            var temp = document.getElementById("bod").innerHTML;
+            document.getElementById("bod").innerHTML = temp + "<img src='https://i2.wp.com/ilikeinterfaces.com/wp-content/uploads/2015/11/00_19_1400065.png?ssl=1'";
+
+
+          }
+          else if(parseInt(cont1Value) >= parseInt(cont2Value))
+          {
+
+            console.log("cont1Value is Greater ");
+          console.log(cont1Value.toString());
           console.log("cont2Value is ")
           console.log(cont2Value);
-          
+          console.log(parseFloat(parseInt(cont1Value) / parseInt(cont2Value)));
+          ratioNumber = (parseInt(parseInt(cont1Value) / parseInt(cont2Value)));
+          }
+          else
+          {
+
+          console.log("cont1Value is ");
+          console.log(cont1Value);
+          console.log("cont2Value is  Greater")
+          console.log(cont2Value);
+          console.log(parseInt(parseInt(cont2Value) / parseInt(cont1Value))); 
+          ratioNumber = parseInt(parseInt(cont2Value) / parseInt(cont1Value));
+          }
+          var temp = parseInt(ratioNumber);
+          console.log(typeof(temp));
+          console.log(temp);
+          console.log("China");
+          displayCont("Russia",'ten', temp);
 
         });
 
 
+
 }
 
+
+  // function displayCont(countryName,identifier, counter) 
+  // {
+  //   var svgImplementation = ""; // This varaible will be used to store all the svgs that are going to be needed
+  //   var svgIdentifier = 'a'; // This variable is used to give each of the added svgs their own individual identifier per function call
+  //   var t = 1;
+  //   for(var i =0; i < counter; i++) // Creates all the necessary SVGS
+  //   {
+
+  //     var svgLine = "<svg id="+identifier +svgIdentifier+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>"; //Creates a new svg with thier new identifier
+  //     svgImplementation = svgImplementation.concat(svgLine); // Concatenates the svg overall
+  //     console.log(i);
+  //     console.log(svgLine);
+  //     svgIdentifier = String.fromCharCode(svgIdentifier.charCodeAt(0)+1); // increments the svg 
+  //     if(i%26 == 0 && i > 0)
+  //     {
+  //       svgIdentifier = 'a';
+  //         for(p=0; p<t;p++)
+  //       {
+  //         var temp = 'a';
+  //         svgIdentifier = svgIdentifier.concat(temp);
+  //       }
+  //       //identifier by one so that it can be in sequential order
+  //       t+=1;
+  //     }
+      
+  //   }
+  //   document.getElementById("svgInsertion").innerHTML = svgImplementation; // Adds the created svg to the identifier 
+
+  //   //Will generate a random number from 1 to 255 and be used to color in the country randomly
+  //   var redValue = Math.floor((Math.random() * 255) + 1); 
+  //   var greenValue = Math.floor((Math.random() * 255) + 1);
+  //   var blueVale = Math.floor((Math.random() * 255) + 1);
+    
+  //   //Gets the necessary JSON data from a list of countries throughout the world
+  //   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+  //     .then((data) => 
+  //     {
+  //       // Filter data
+  //       data.filter(
+  //       function(d)
+  //       {
+  //         if(d.name == countryName) 
+  //         {
+  //           //The d3 function call for centering does it in (East,North) coordinates as opposed to (North,East) so it must be flipped
+  //           d.latlng.reverse(); // Flips the coordinates for the center coordinate of a country
+  //           var projection = d3.geoMercator() 
+  //             .center(d.latlng) //Centers the country in the center of the svg
+  //             .scale(100) //Scales the size of the country
+
+  //           //Grabs another json file that contains the coordinates of countries (not all of the countries in the previous json are in here)
+  //           d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
+  //           .then((data) => 
+  //           {                       
+  //             //Finds the country within the new json file to return the properties of it           
+  //             data.features = data.features.filter(function(d){ return d.properties.ADMIN==countryName})
+  //             svgIdentifier = 'a';// sets the identier at the beginning so that it can iterate through it
+  //             t = 1;
+  //             for(var i = 0; i < counter; i++) // Draws the map in each svg
+  //             {
+
+  //                    if(i%26 == 0 && i > 0)
+  //                     {
+  //                       svgIdentifier = 'a';
+  //                         for(p=0; p<t;p++)
+  //                       {
+  //                         var temp = 'a';
+  //                         svgIdentifier = svgIdentifier.concat(temp);
+
+  //                       }
+  //                       //identifier by one so that it can be in sequential order
+  //                       t+=1;
+  //                     }
+  //               var svgSection = d3.select("#"+identifier+svgIdentifier+"");
+  //               svgIdentifier = String.fromCharCode(svgIdentifier.charCodeAt(0)+1);
+  //               svgSection.append("g")
+  //                         .selectAll("path")
+  //                         .data(data.features)
+  //                         .enter()
+  //                         .append("path")
+  //                         .attr("fill", "rgb("+redValue+","+greenValue+","+blueVale+")")
+  //                         .attr("d", d3.geoPath().projection(projection));   
+  //             }
+  //           }
+  //           )                                                     
+  //         }
+  //       }
+  //       )
+  //     })
+  // }
 
 function displayCont(contName,color, counter) 
 {
@@ -79,7 +190,7 @@ function displayCont(contName,color, counter)
           t =t.concat(WOW);
           alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
         }
-        document.getElementById("bod").innerHTML = t;
+        document.getElementById("svgInsertion").innerHTML = t;
 
   r = Math.floor((Math.random() * 255) + 1);
   g = Math.floor((Math.random() * 255) + 1);
@@ -132,16 +243,6 @@ function displayCont(contName,color, counter)
 
 }
 
-var xshift = 90;
-var yshift = 90;
-// displayCont("Puerto Rico", "peru", [154.44 + xshift,120.6 + yshift])
-// displayCont("Russia", "blue", [150 + xshift,100 + yshift])
-// displayCont("China", "crimson", [154.44 + xshift,133.2 + yshift])
-   
-      
-      
-      // console.log("Center is")
-      // console.log(Center)
    </script>
 
    <!DOCTYPE html>
@@ -292,18 +393,23 @@ function submitCalc(cont1Name, cont2Name, option)
     case "area":
     gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20area.csv";
     break;
+    case "public debt":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20public%20debt.csv";
+    break;
+
   }
 
   console.log("GitLink is", gitLink)
-  var cont1Value = select_figure_remote(cont1Name, cont2Name, optionName, gitLink);
-  var cont2Value = select_figure_remote(cont1Name, cont2Name, optionName, gitLink);
+  var cont1Value = parseInt(select_figure_remote(cont1Name, cont2Name, optionName, gitLink));
+  var cont2Value = parseInt(select_figure_remote(cont1Name, cont2Name, optionName, gitLink));
 
   console.log("Cont 1 value is ");
   console.log(document.getElementById("Random").innerText);
   console.log(cont1Value);
   console.log("Cont 2 value is");
   console.log(cont2Value);
-  console.log(parseInt(cont1Value) / parseInt(cont2Value))
+  console.log("Division is ");  
+
 
 }
 
@@ -327,7 +433,7 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
 
   var innerHTMLCont1 = "";
   var innerHTMLCont2 = "";
-  var optionKeys = ["population", "area", "Internet users"]
+  var optionKeys = ["population", "area", "Internet users", "public debt"]
   for(i = 0; i< countries.length; i++)
   {
     // console.log(countries[i]);
@@ -349,7 +455,7 @@ d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01
 
 })
 
-var cont1Name = "Russia";
+var cont1Name = "Dominican Republic";
 var cont2Name = "China";
 var optionName = "area";
 var cont1Value = 0;
