@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+path {
+  stroke: white;
+  stroke-width: 0.25px;
+  fill: grey;
+}
+</style>
+<body>
+<script src="https://d3js.org/d3.v6.js"></script>
+<script src="https://unpkg.com/topojson@3"></script>
+<script>
+var width = 960,
+    height = 500;
+
+var projection = d3.geoMercator()
+    .center([0, 5 ])
+    .scale(150)
+    .rotate([-180,0]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width)
+    .attr("height", height);
+
+var path = d3.geoPath()
+    .projection(projection);
+
+
+function clicked(d) {
+  if (active.node() === this) return reset();
+  active.classed("active", false);
+  active = d3.select(this).classed("active", true);
+
+  var bounds = path.bounds(d),
+      dx = bounds[1][0] - bounds[0][0],
+      dy = bounds[1][1] - bounds[0][1],
+      x = (bounds[0][0] + bounds[1][0]) / 2,
+      y = (bounds[0][1] + bounds[1][1]) / 2,
+      scale = Math.max(1, Math.min(8, 0.9 / Math.max(dx / width, dy / height))),
+      translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+  svg.transition()
+      .duration(750)
+      // .call(zoom.translate(translate).scale(scale).event); // not in d3 v4
+      .call( zoom.transform, d3.zoomIdentity.translate(translate[0],translate[1]).scale(scale) ); // updated for d3 v4
+}
+
+
+
+var g = svg.append("g");
+
+// load and display the World
+d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countriesTopoJSON.json").then(function(topology) {
+
+    g.selectAll("path")
+       .data(topojson.feature(topology, topology.objects.countries)
+           .features)
+       .enter().append("path")
+       .attr("d", path)
+       .on("click", clicked);
+
+});
+
+var zoom = d3.zoom()
+      .scaleExtent([1, 8])
+      .on('zoom', function(event) {
+          g.selectAll('path')
+           .attr('transform', event.transform);
+          g.selectAll("circle")
+           .attr('transform', event.transform);
+});
+
+svg.call(zoom);
+  
+</script>
+</body>
+</html>
