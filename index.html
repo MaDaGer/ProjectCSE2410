@@ -20,7 +20,7 @@
    <body id ="svgInsertion"></body>
    <script>
 
-var alpha = 'a';
+
 var t = '';
 function select_figure_remote(cont1Name,cont2Name, selector, url)
 {
@@ -82,7 +82,7 @@ function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log(typeof(temp));
           console.log(temp);
           console.log("China");
-          displayCont("Russia",'ten', temp);
+          displayCont(cont1Name,'ten', temp);
 
         });
 
@@ -183,12 +183,26 @@ function select_figure_remote(cont1Name,cont2Name, selector, url)
 
 function displayCont(contName,color, counter) 
 {
+  var realCounter = counter;
+  // var limit = 5;
+  // if(counter > limit)
+  // {
+  //   realCounter = limit;
+  // }
+  // else if(counter < limit)
+  // {
+  //   realCounter = counter;
+  // }
+  //id names for the svgs
+  var names = [];
+  for(var i =0; i < realCounter; i++){
 
-  for(var i =0; i < counter; i++){
-        
+          var alpha = Math.random();
+          alpha  = alpha.toString(36).substr(2,9);
+          names.push(alpha);
           var WOW = "<svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
           t =t.concat(WOW);
-          alpha = String.fromCharCode(alpha.charCodeAt(0)+1);
+          
         }
         document.getElementById("svgInsertion").innerHTML = t;
 
@@ -221,10 +235,10 @@ function displayCont(contName,color, counter)
                                       data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
                                      // console.log(data.features.filter(function(d){ return d.geometry}));
                                       // Draw the map
-                                      var beta = 'a';
-                                      for(var i = 0; i < counter; i++){
-                                       var q = d3.select("#svg"+beta+"");
-                                       beta = String.fromCharCode(beta.charCodeAt(0)+1);
+                                      // var beta = 'a';
+                                      for(var i = 0; i < realCounter; i++){
+                                       var q = d3.select("#svg" + names[i]);
+                                       // beta = String.fromCharCode(beta.charCodeAt(0)+1);
                                         q.append("g")
                                           .selectAll("path")
                                           .data(data.features)
