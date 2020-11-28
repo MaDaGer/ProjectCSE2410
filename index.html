@@ -15,7 +15,6 @@
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
   <!-- <table id = "tb"> -->
-   <body></body>
    <script>
 
 
@@ -64,6 +63,12 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log("Ratio number should be");
           console.log(Math.ceil(parseInt(cont1Value) / parseInt(cont2Value)));
           ratioNumber = Math.ceil((parseInt(cont1Value) / parseInt(cont2Value)));
+          displayCont(cont2Name,"svgInsertion" ,ratioNumber);
+          displayCont(cont1Name,"svgInsertion1" ,1);
+          var bodyHTML = document.getElementById("svgInsertion").innerHTML;
+
+          bodyHTML = "<h1>" + cont2Name + " is ~" + ratioNumber.toString() + " smaller than " + cont1Name + " in terms of " + selector +"</h1>" +  bodyHTML;
+          document.getElementById("svgInsertion").innerHTML = bodyHTML;
           }
           else
           {
@@ -75,10 +80,17 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log("Ratio Number should be");
           console.log(parseInt(cont2Value) / parseInt(cont1Value)); 
           ratioNumber = Math.ceil(parseInt(cont2Value) / parseInt(cont1Value));
-          }
-
           displayCont(cont1Name,"svgInsertion" ,ratioNumber);
           displayCont(cont2Name,"svgInsertion1" ,1);
+
+          var bodyHTML = document.getElementById("svgInsertion").innerHTML;
+          bodyHTML = "<h1>" + cont1Name + " is ~" + ratioNumber.toString() + " smaller than " + cont2Name + " in terms of " + selector+"</h1>" +  bodyHTML;
+          document.getElementById("svgInsertion").innerHTML = bodyHTML;
+
+
+          }
+
+          
 
         });
 
@@ -86,11 +98,22 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
 
 }
 
+var limit = 20;
 
-  function displayCont(countryName,TT,counter) 
+
+  function displayCont(countryName,TT,inputCounter) 
   {
-    var Ident = [];
+    console.log("Limit is ");
+    console.log(limit);
     var p = "";
+    var counter = inputCounter;
+    if(inputCounter >= limit)
+    {
+      counter = limit;
+      p = "<h4> limit of countries reached</h4><h4> (only displaying " + limit.toString() + " ) </h4>";
+    }
+    var Ident = [];
+    
 
     for(var i =0; i < counter; i++) // Creates all the necessary SVGS
     {
