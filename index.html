@@ -109,7 +109,7 @@ var limit = 0;
   {
     console.log("Limit is ");
     console.log(limit);
-    var p = "";
+    var p = "<h4>Note: some countries are too small to be seen without zooming in. </h4>";
     var counter = inputCounter;
     if(inputCounter >= limit)
     {
@@ -124,7 +124,7 @@ var limit = 0;
       var svgIdentifier = Math.random(); // This variable is used to give each of the added svgs their own individual identifier per function call
       svgIdentifier = svgIdentifier.toString(36).substr(2,9);
       Ident.push(svgIdentifier);
-      var svgLine = "<svg id=\"svg" +svgIdentifier+"\" style=\"width: 1000px; height: 500px; display:inline\"></svg>"; //Creates a new svg with thier new identifier
+      var svgLine = "<svg id=\"svg" +svgIdentifier+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>"; //Creates a new svg with thier new identifier
        p+= svgLine;
       }
       document.getElementById(TT).innerHTML = p;
