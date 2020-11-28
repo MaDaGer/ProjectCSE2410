@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<body style = "height: 100%; top: 50%; left: 50%;"></body>
+<body  style = "height: 100%; top: 50%; left: 50%;">
    <!-- Load d3.js -->
    <table>
-    <tr>
-      <th id="Random"></th>
-    </tr>
+      <th id ="svgInsertion"></th>
+      <th id ="svgInsertion1"></th>
     </table>
+</body>
    <script src="https://d3js.org/d3.v6.js">
   
   
@@ -15,7 +15,7 @@
       <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
    <!-- Create an element where the map will take place -->
   <!-- <table id = "tb"> -->
-   <body id ="svgInsertion"></body>
+   <body></body>
    <script>
 
 
@@ -78,7 +78,8 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log(typeof(temp));
           console.log(temp);
           console.log("China");
-          displayCont(cont1Name, temp);
+          displayCont(cont1Name,"svgInsertion" ,temp);
+          displayCont(cont2Name,"svgInsertion1" ,1);
 
         });
 
@@ -87,7 +88,7 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
 }
 
 
-  function displayCont(countryName,counter) 
+  function displayCont(countryName,TT,counter) 
   {
     var Ident = [];
     for(var i =0; i < counter; i++) // Creates all the necessary SVGS
@@ -96,7 +97,7 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
       svgIdentifier = svgIdentifier.toString(36).substr(2,9);
       Ident.push(svgIdentifier);
       var svgLine = "<svg id=\"svg" +svgIdentifier+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>"; //Creates a new svg with thier new identifier
-      document.getElementById("svgInsertion").innerHTML += svgLine; // Adds the created svg to the identifier 
+      document.getElementById(TT).innerHTML += svgLine; // Adds the created svg to the identifier 
       }
       
 
