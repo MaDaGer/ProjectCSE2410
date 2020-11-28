@@ -52,8 +52,8 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           var ratioNumber = 0;
           if(cont1Value == 0 || cont2Value == 0)
           {
-            var temp = document.getElementById("bod").innerHTML;
-            document.getElementById("bod").innerHTML = temp + "<img src='https://i2.wp.com/ilikeinterfaces.com/wp-content/uploads/2015/11/00_19_1400065.png?ssl=1'";
+            var temp = document.getElementById("svgInsertion").innerHTML;
+            document.getElementById("svgInsertion").innerHTML = temp + "<img src='https://i2.wp.com/ilikeinterfaces.com/wp-content/uploads/2015/11/00_19_1400065.png?ssl=1'";
 
 
           }
@@ -65,13 +65,23 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log("cont2Value is ")
           console.log(cont2Value);
           console.log("Ratio number should be");
-          console.log(Math.ceil(parseInt(cont1Value) / parseInt(cont2Value)));
-          ratioNumber = Math.ceil((parseInt(cont1Value) / parseInt(cont2Value)));
+          console.log(Math.round(parseInt(cont1Value) / parseInt(cont2Value)));
+          ratioNumber = Math.round((parseInt(cont1Value) / parseInt(cont2Value)));
           displayCont(cont2Name,"svgInsertion" ,ratioNumber);
           displayCont(cont1Name,"svgInsertion1" ,1);
           var bodyHTML = document.getElementById("svgInsertion").innerHTML;
+          if(ratioNumber == 1)
+          {
+                      bodyHTML = "<h1>" + cont2Name + " is about the same as  " + cont1Name + " in terms of " + selector +"</h1>" +  bodyHTML;
+          }
+          else
+          {
+            bodyHTML = "<h1>" + cont2Name + " is ~" + ratioNumber.toString() + " smaller than " + cont1Name + " in terms of " + selector +"</h1>" +  bodyHTML;
+          }
+          
+          
 
-          bodyHTML = "<h1>" + cont2Name + " is ~" + ratioNumber.toString() + " smaller than " + cont1Name + " in terms of " + selector +"</h1>" +  bodyHTML;
+          
           document.getElementById("svgInsertion").innerHTML = bodyHTML;
           }
           else
@@ -83,7 +93,7 @@ var t = '';function select_figure_remote(cont1Name,cont2Name, selector, url)
           console.log(cont2Value);
           console.log("Ratio Number should be");
           console.log(parseInt(cont2Value) / parseInt(cont1Value)); 
-          ratioNumber = Math.ceil(parseInt(cont2Value) / parseInt(cont1Value));
+          ratioNumber = Math.round(parseInt(cont2Value) / parseInt(cont1Value));
           displayCont(cont1Name,"svgInsertion" ,ratioNumber);
           displayCont(cont2Name,"svgInsertion1" ,1);
 
@@ -351,7 +361,7 @@ function submitCalc(cont1Name, cont2Name, option)
   var cont2Value = parseInt(select_figure_remote(cont1Name, cont2Name, optionName, gitLink));
 
   console.log("Cont 1 value is ");
-  console.log(document.getElementById("Random").innerText);
+  // console.log(document.getElementById("Random").innerText);
   console.log(cont1Value);
   console.log("Cont 2 value is");
   console.log(cont2Value);
