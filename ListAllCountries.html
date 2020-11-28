@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<body style = "height: 100%; top: 50%; left: 50%;">
+   <!-- Load d3.js -->
+   <table>
+    <tr>
+      <th id="Random">
+        0
+      </th>
+    </tr>
+    </table>
+   <script src="https://d3js.org/d3.v6.js">
+
+
+  </script>
+   <!-- <script src="https://d3js.org/d3-scale-chromatic.v2.min.js"></script>
+      <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script> -->
+   <!-- Create an element where the map will take place -->
+  <!-- <table id = "tb"> -->
+   <body id ="svgInsertion"></body>
+   <script>
+
+
+var t = '<table>';
+function select_figure_remote(cont1Name,cont2Name, selector, url)
+{
+  var temp ="";
+  var cont1Value = 0;
+  var cont2Value = 0;
+  console.log(cont1Name);
+  console.log(cont2Name);
+  console.log(cont1Value);
+  console.log(cont2Value);
+  console.log(selector);
+  d3.csv(String(url)).then(function(data) {
+    var output2 =  data.forEach(function(d) {
+            d.country = d.country;
+            // d.population = +d.population;
+          });
+          var output = data.filter(function(d){
+            if(d.country == cont1Name) {
+              console.log(String(d.country));
+              console.log(d[selector]);
+              cont1Value = +d[selector];
+            }
+            else if(d.country == cont2Name)
+            {
+              console.log(d.country);
+              cont2Value = +d[selector];
+            }
+          })
+
+          var ratioNumber = 0;
+          if(cont1Value == 0 || cont2Value == 0)
+          {
+            var temp = document.getElementById("svgInsertion").innerHTML;
+            document.getElementById("svgInsertion").innerHTML = temp + "<img src='https://i2.wp.com/ilikeinterfaces.com/wp-content/uploads/2015/11/00_19_1400065.png?ssl=1'";
+
+
+          }
+          else if(parseInt(cont1Value) >= parseInt(cont2Value))
+          {
+
+            console.log("cont1Value is Greater ");
+          console.log(cont1Value.toString());
+          console.log("cont2Value is ")
+          console.log(cont2Value);
+          console.log(parseFloat(parseInt(cont1Value) / parseInt(cont2Value)));
+          ratioNumber = (parseInt(parseInt(cont1Value) / parseInt(cont2Value)));
+          }
+          else
+          {
+
+          console.log("cont1Value is ");
+          console.log(cont1Value);
+          console.log("cont2Value is  Greater")
+          console.log(cont2Value);
+          console.log(parseInt(parseInt(cont2Value) / parseInt(cont1Value)));
+          ratioNumber = parseInt(parseInt(cont2Value) / parseInt(cont1Value));
+          }
+          var temp = parseInt(ratioNumber);
+          console.log(typeof(temp));
+          console.log(temp);
+          console.log("China");
+          displayCont(cont1Name, temp);
+          var temp = document.getElementById("svgInsertion").innerHTML;
+          console.log("Temp is ");
+          console.log(temp);
+          document.getElementById("svgInsertion").innerHTML = temp + "</table>";
+
+          displayBigCont(cont2Name, 1);
+
+          // var bodyHTML = document.getElementById("svgInsertion").innerHTML;
+          // console.log(bodyHTML);
+          // bodyHTML.concat("<table><tr></tr><tr><td>", bodyHTML, "</td><td></td></tr>")
+
+
+        });
+
+
+
+}
+
+
+
+function displayBigCont(contName, counter)
+{
+  var realCounter = counter;
+  var name = "BigCont";
+  // for(var i =0; i < realCounter; i++){
+
+          // var alpha = Math.random();
+          // alpha  = alpha.toString(36).substr(2,9);
+          // names.push(alpha);
+          var WOW = "<svg id=\"#svg" +name+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>";
+          // t =t.concat(WOW);
+        // }
+        console.log("TD tag is equal to: ");
+        // console.log(t);
+        var bodyHTML = document.getElementById("svgInsertion").innerHTML;
+        console.log("First half")
+        var firstHalf = bodyHTML.substr(0, bodyHTML.search("</td>") + 9);
+        console.log(firstHalf);
+        var secondHalf = bodyHTML.substr(bodyHTML.search("</td><td>") + 9, bodyHTML.length);
+        bodyHTML = firstHalf + WOW + secondHalf;
+        document.getElementById("svgInsertion").innerHTML = bodyHTML;
+        console.log("Second half");
+        console.log(secondHalf);
+
+  r = Math.floor((Math.random() * 255) + 1);
+  g = Math.floor((Math.random() * 255) + 1);
+  b = Math.floor((Math.random() * 255) + 1);
+   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+      .then((data) =>
+      {
+                    // Filter data
+                    data.filter(
+                        function(d){
+                            if(d.name == contName)
+                            {
+                               //  console.log(d.name);
+                                d.latlng.reverse();
+                               //  console.log("Local Center is")
+                                // d.latlng = [0,0];
+                               // Center = d.latlng;
+                               //  console.log(Center);
+                                // console.log(transLate);
+                               // console.log(d.latlng);
+                                var projection = d3.geoMercator()
+                                .center(d.latlng)
+                                .scale(100)
+                                d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
+                                  .then((data) => {
+                                   // console.log(d.latlng);
+
+                                      data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
+                                     // console.log(data.features.filter(function(d){ return d.geometry}));
+                                      // Draw the map
+                                      // var beta = 'a';
+                                      console.log("SVG NAME IS ");
+                                      console.log("#svg" + name);
+                                       var q = d3.select("#svg" + name);
+                                       // beta = String.fromCharCode(beta.charCodeAt(0)+1);
+                                        q.append("g")
+                                          .selectAll("path")
+                                          .data(data.features)
+                                          .enter()
+                                          .append("path")
+                                            .attr("fill", "rgb("+r+","+g+","+b+")")
+                                            .attr("d", d3.geoPath()
+                                                .projection(projection));
+                                    })
+
+                            }
+                                      })
+      })
+
+}
+
+
+
+
+function displayCont(contName, counter)
+{
+  var realCounter = counter;
+  var names = [];
+  for(var i =0; i < realCounter; i++){
+
+          var alpha = Math.random();
+          alpha  = alpha.toString(36).substr(2,9);
+          names.push(alpha);
+          var WOW = "<tr><td><svg id=\"svg" +alpha+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg></td><td></td></tr>";
+          t =t.concat(WOW);
+
+        }
+        console.log("T is equal to");
+        console.log(t);
+        document.getElementById("svgInsertion").innerHTML = t;
+
+  r = Math.floor((Math.random() * 255) + 1);
+  g = Math.floor((Math.random() * 255) + 1);
+  b = Math.floor((Math.random() * 255) + 1);
+   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+      .then((data) =>
+      {
+                    // Filter data
+                    data.filter(
+                        function(d){
+                            if(d.name == contName)
+                            {
+                               //  console.log(d.name);
+                                d.latlng.reverse();
+                               //  console.log("Local Center is")
+                                // d.latlng = [0,0];
+                               // Center = d.latlng;
+                               //  console.log(Center);
+                                // console.log(transLate);
+                               // console.log(d.latlng);
+                                var projection = d3.geoMercator()
+                                .center(d.latlng)
+                                .scale(100)
+                                d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
+                                  .then((data) => {
+                                   // console.log(d.latlng);
+
+                                      data.features = data.features.filter(function(d){ return d.properties.ADMIN==contName})
+                                     // console.log(data.features.filter(function(d){ return d.geometry}));
+                                      // Draw the map
+                                      // var beta = 'a';
+                                      for(var i = 0; i < realCounter; i++){
+                                       var q = d3.select("#svg" + names[i]);
+                                       // beta = String.fromCharCode(beta.charCodeAt(0)+1);
+                                        q.append("g")
+                                          .selectAll("path")
+                                          .data(data.features)
+                                          .enter()
+                                          .append("path")
+                                            .attr("fill", "rgb("+r+","+g+","+b+")")
+                                            .attr("d", d3.geoPath()
+                                                .projection(projection));
+
+                                      }
+                                    })
+
+                            }
+                                      })
+      })
+
+}
+
+
+  // function displayCont(countryName,counter)
+  // {
+  //   var Ident = [];
+  //   for(var i =0; i < counter; i++) // Creates all the necessary SVGS
+  //   {
+  //     var svgIdentifier = Math.random(); // This variable is used to give each of the added svgs their own individual identifier per function call
+  //     svgIdentifier = svgIdentifier.toString(36).substr(2,9);
+  //     Ident.push(svgIdentifier);
+  //     var svgLine = "<svg id=\"svg" +svgIdentifier+"\" style=\"width: 1000px; height: 500px; border: solid; border-color: black; display:inline\"></svg>"; //Creates a new svg with thier new identifier
+  //     document.getElementById("svgInsertion").innerHTML += svgLine; // Adds the created svg to the identifier
+  //     }
+
+
+  //   //Will generate a random number from 1 to 255 and be used to color in the country randomly
+  //   var redValue = Math.floor((Math.random() * 255) + 1);
+  //   var greenValue = Math.floor((Math.random() * 255) + 1);
+  //   var blueVale = Math.floor((Math.random() * 255) + 1);
+
+  //   //Gets the necessary JSON data from a list of countries throughout the world
+  //   d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+  //     .then((data) =>
+  //     {
+  //       // Filter data
+  //       data.filter(
+  //       function(d)
+  //       {
+  //         if(d.name == countryName)
+  //         {
+  //           //The d3 function call for centering does it in (East,North) coordinates as opposed to (North,East) so it must be flipped
+  //           d.latlng.reverse(); // Flips the coordinates for the center coordinate of a country
+  //           var projection = d3.geoMercator()
+  //             .center(d.latlng) //Centers the country in the center of the svg
+  //             .scale(100) //Scales the size of the country
+
+  //           //Grabs another json file that contains the coordinates of countries (not all of the countries in the previous json are in here)
+  //           d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/countries.json")
+  //           .then((data) =>
+  //           {
+  //             //Finds the country within the new json file to return the properties of it
+  //             data.features = data.features.filter(function(d){ return d.properties.ADMIN==countryName})
+  //             t = 1;
+  //             for(var i = 0; i < counter; i++) // Draws the map in each svg
+  //             {
+  //               var svgSection = d3.select("#svg"+Ident[i]);
+  //               svgSection.append("g")
+  //                         .selectAll("path")
+  //                         .data(data.features)
+  //                         .enter()
+  //                         .append("path")
+  //                         .attr("fill", "rgb("+redValue+","+greenValue+","+blueVale+")")
+  //                         .attr("d", d3.geoPath().projection(projection));
+  //             }
+  //           }
+  //           )
+  //         }
+  //       }
+  //       )
+  //     })
+  // }
+
+
+   </script>
+
+   <!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.dropbtn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.dropbtn:hover, .dropbtn:focus {
+  background-color: #3e8e41;
+}
+
+#myInput {
+  box-sizing: border-box;
+
+  background-position: 14px 12px;
+  background-repeat: no-repeat;
+  font-size: 16px;
+  padding: 14px 20px 12px 45px;
+  border: none;
+  border-bottom: 1px solid #ddd;
+}
+
+#myInput:focus {outline: 3px solid #ddd;}
+
+.dropdown {
+  /*position: relative;*/
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f6f6f6;
+  min-width: 230px;
+  max-height: 230px;
+  min-height: 300px;
+  overflow: auto;
+  border: 1px solid #ddd;
+  z-index: 1;
+}
+
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown a:hover {background-color: #ddd;}
+
+.show {display: block;}
+</style>
+</head>
+<body>
+
+
+<h2>Search/Filter Dropdown</h2>
+<p>Click on the button to open the dropdown menu, and use the input field to search for a specific dropdown link.</p>
+
+<table width="1000px">
+<tr>
+  <td>
+  <div >
+    <button onclick="showCont1()" class="dropbtn">Country 1</button>
+    <div id="cont1" class="dropdown-content">
+      <input type="cont1Input" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont1','cont1Input')">
+      <a clicked() href="#about">About</a>
+    </div>
+  </div>
+  </td>
+
+<td>
+
+<div >
+  <button onclick="showCont2()" class="dropbtn">Country 2</button>
+  <div id="cont2" class="dropdown-content">
+    <input type="text" placeholder="Search.." id="myInput" onkeyup="filterFunction('cont2', 'cont2Input')">
+    <a clicked() href="#about">About</a>
+  </div>
+</div>
+
+<td>
+<div >
+  <button onclick="showOption()" class="dropbtn">Option</button>
+  <div id="option" class="dropdown-content">
+    <input type="optionInput" placeholder="Search.." id="myInput" onkeyup="filterFunction()">
+    <a clicked() href="#about">About</a>
+  </div>
+</div>
+</td>
+
+
+</td>
+
+</tr>
+
+
+
+</table>
+
+
+<button onclick="submitCalc(cont1Name, cont2Name, optionName)" class="dropbtn">Submit</button>
+
+
+
+
+
+<script>
+
+/* When the user clicks on the button,
+toggle between hiding and showing the dropdown content */
+function showCont1() {
+  document.getElementById("cont1").classList.toggle("show");
+}
+function showCont2() {
+  document.getElementById("cont2").classList.toggle("show");
+}
+function showOption() {
+  document.getElementById("option").classList.toggle("show");
+}
+
+
+
+
+function submitCalc(cont1Name, cont2Name, option)
+{
+  console.log(cont1Name);
+  console.log(cont2Name);
+  console.log(option);
+
+  var gitLink = "";
+  switch(option)
+  {
+    case "population":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/pop.csv";
+    break;
+    case "Internet users":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20internet%20users.csv";
+    break;
+    case "area":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20area.csv";
+    break;
+    case "public debt":
+    gitLink = "https://raw.githubusercontent.com/MaDaGer/CSV-data/main/country%20public%20debt.csv";
+    break;
+
+  }
+
+  console.log("GitLink is", gitLink)
+  var cont1Value = parseInt(select_figure_remote(cont1Name, cont2Name, optionName, gitLink));
+  var cont2Value = parseInt(select_figure_remote(cont1Name, cont2Name, optionName, gitLink));
+
+  console.log("Cont 1 value is ");
+  console.log(document.getElementById("Random").innerText);
+  console.log(cont1Value);
+  console.log("Cont 2 value is");
+  console.log(cont2Value);
+  console.log("Division is ");
+
+
+}
+
+
+const countries = new Array();
+
+// console.log(typeof("help"));
+// console.log(typeof(countries))
+d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+.then((data) =>
+{
+  // console.log(data);
+  data.filter(
+    function(d){
+      // console.log(d.name);
+      // console.log(typeof(d.name));
+      countries.push(d.name);
+    }
+    )
+  // console.log(countries);
+
+  var innerHTMLCont1 = "";
+  var innerHTMLCont2 = "";
+  var optionKeys = ["population", "area", "Internet users", "public debt"]
+  for(i = 0; i< countries.length; i++)
+  {
+    // console.log(countries[i]);
+    innerHTMLCont1 += "<a onclick=\"cont1Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+    innerHTMLCont2 += "<a onclick=\"cont2Name = \'" + countries[i] + "\';\" href=#" + countries[i] + ">" + countries[i] + "</a>";
+
+  }
+  var innerHTMLOption = "";
+  for(i = 0; i< optionKeys.length; i++)
+  {
+    // console.log(countries[i]);
+    innerHTMLOption += "<a onclick=\"optionName = \'" + optionKeys[i] + "\';\" href=#" + optionKeys[i] + ">" + optionKeys[i] + "</a>";
+
+  }
+
+  document.getElementById("cont1").innerHTML  = '<input type="text" placeholder="Search.." id="cont1Input" onkeyup="filterFunction(\'cont1\', \'cont1Input\')">' + innerHTMLCont1 ;
+  document.getElementById("cont2").innerHTML  = '<input type="text" placeholder="Search.." id="cont2Input" onkeyup="filterFunction(\'cont2\', \'cont2Input\')">' + innerHTMLCont2 ;
+    document.getElementById("option").innerHTML  = '<input type="text" placeholder="Search.." id="optionInput" onkeyup="filterFunction(\'option\', \'optionInput\')">' + innerHTMLOption ;
+
+})
+
+var cont1Name = "Russia";
+var cont2Name = "China";
+var optionName = "area";
+var cont1Value = 0;
+var cont2Value = 0;
+
+listAll();
+function listAll() {
+  d3.json("https://gist.githubusercontent.com/MaDaGer/ff16dc57eb4f0f1548d216162d01cd69/raw/70099ed32a6f40d96e9bcdc9689dbb3a9bf91518/countries.json")
+     .then((data) =>
+     {
+                   // Filter data
+                   data.filter(function(d){
+                     displayCont(d.name, 1);
+                   });
+                 });
+}
+
+function filterFunction(dropdownID, inputID) {
+
+   d3.json("https://raw.githubusercontent.com/MaDaGer/CountriesGeoJSON/main/aliases.json")
+  .then((data) =>
+  {
+      var nicknames = new Array();
+    nicknames = Object.keys(data);
+    conts = Object.values(data);
+    // console.log(nicknames);
+
+      var input, filter, ul, li, a, i;
+  input = document.getElementById(inputID);
+  filter = input.value.toUpperCase();
+  div = document.getElementById(dropdownID);
+  a = div.getElementsByTagName("a");
+
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter)  > -1) {
+      a[i].style.display = "";
+    }
+    // else if (filter inside of nicknames )
+    // else if(nicknames.find())
+    // {
+    //   console.log("I' here");
+    // }
+    else {
+      a[i].style.display = "none";
+    }
+  }
+
+
+  })
+
+
+
+}
+</script>
+
+</body>
+</html>
+
+
+</body>
